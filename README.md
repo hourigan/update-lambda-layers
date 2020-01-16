@@ -5,3 +5,5 @@ Add a environment variables called "Filter" with a string which is used to filte
 
 Available on the AWS Servless Repo
 https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:937933383641:applications~UpdateLambdaLayers
+
+<a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=LambdaLayerUpdater&templateURL=https://raw.githubusercontent.com/hourigan/update-lambda-layers/master/cloudformation.yaml"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"/></a>
