@@ -1,0 +1,75 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Lambda Layer Updater",
+    "Resources": {
+        "LambdaLayerUpdaterRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": ["lambda.amazonaws.com"]
+                            },
+                            "Action": ["sts:AssumeRole"]
+                        }
+                    ]
+                },
+                "Path": "/"
+            }
+        },
+        "LambdaLayerUpdaterPolicy": {
+            "DependsOn": [
+                "LambdaLayerUpdaterRole"
+            ],
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "MyLambdaToMakeLogsRolePolicy",
+                "Roles": [
+                    {"Ref": "LambdaLayerUpdaterRole"}
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "lambda:ListFunctions",
+                                "lambda:InvokeFunction",
+                                "lambda:GetLayerVersion",
+                                "lambda:ListVersionsByFunction",
+                                "lambda:GetFunction",
+                                "lambda:UpdateFunctionConfiguration",
+                                "lambda:ListLayerVersions",
+                                "lambda:ListLayers"
+                            ],
+                            "Resource": ["*"]
+                        }
+                    ]
+                }
+            }
+        },
+        "LambdaLayerUpdater": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [
+                "LambdaLayerUpdaterRole",
+                "LambdaLayerUpdaterPolicy"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "hourigan-lambda",
+                    "S3Key": "update-lambda-layers-f2a53ade-3927-4332-901a-1f75f513e78d"
+                },
+                "Role": {
+                    "Fn::GetAtt": ["LambdaLayerUpdaterRole", "Arn"]
+                },
+                "Timeout": 60,
+                "Handler": "lambda_function.lambda_handler",
+                "Runtime": "python3.7",
+                "MemorySize": 128
+            }
+        }
+    }
+}
